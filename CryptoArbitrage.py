@@ -1,6 +1,12 @@
 import requests
 import matplotlib.pyplot as plt
+import numpy
+from twilio.rest import Client
 
+
+
+
+client = Client(account_sid, auth_token)
 i = 0
 date = []
 arbitrage = []
@@ -28,41 +34,46 @@ while (i<1):
         time = requests.get('https://api.coinbase.com/v2/time')
 
     Time = time.json()['data']['epoch']
+
     iso = time.json()['data']['iso']
+
+    Gain = float(BTCoinbase) - (float(COPprice) / USD2COP)
     # To get date and time replace epoch with iso
 
     date.append(Time)
+
     
-    sBTC = requests.get('https://api.coinbase.com/v2/prices/BTC-USD/sell')
-
-    if (BTC.status_code != 200):
-        sBTC = requests.get('https://api.coinbase.com/v2/prices/BTC-USD/sell')
-
-    sBTCoinbase = sBTC.json()['data']['amount']
-
-
-    Gain = float(BTCoinbase) - (float(COPprice) / USD2COP)
     arbitrage.append(Gain)
-
+    
     plt.plot(date, arbitrage)
-    plt.xlabel('Time')
-    plt.ylabel('Profit')
-    plt.title('BTC Arbitrage')  
-    print("Current Time: " + iso)
+    plt.title("BTC Colombian Arbitrage")
+    plt.ylabel("Profit (USD $)")
+    plt.xlabel("Time")
+    plt.pause(1)
+    plt.draw()
+    
+    if (Gain >= 400):
+        client.messages.create(
+            to = "+17866630320",
+            from_= "+19548926238",
+            body = "The Current BTC Arbitrage profit is $" + str(Gain) + " You should buy NOW!"
+        )
+
+    
+
+    print("Current Time: " + str(iso))
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
-    print("Coinbase price to buy: " + BTCoinbase)
+    print("Current Coinbase Price: " + BTCoinbase)
     print("+++++++++++++++++++++++++++++++++++++++")
-    print("Coinbase price to sell: " + sBTCoinbase)
     print("+++++++++++++++++++++++++++++++++++++++")
-    print("Colombian cost: " + str((float(COPprice) / USD2COP)))
+    print("Current Local Bitcoins Price: " + str((float(COPprice) / USD2COP)))
     print("+++++++++++++++++++++++++++++++++++++++")
     print("Arbitrage gain: " + str(Gain))
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
-
 
