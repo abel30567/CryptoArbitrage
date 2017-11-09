@@ -4,8 +4,7 @@ import numpy
 from twilio.rest import Client
 
 
-account_sid = "ACc5baa1da0a08f630ca8b547ee23823b7"
-auth_token = "68ab65c4963f6e3392b2c74f88b493f6"
+
 
 client = Client(account_sid, auth_token)
 i = 0
