@@ -2,7 +2,10 @@ import requests
 import matplotlib.pyplot as plt
 import numpy
 from twilio.rest import Client
+import gdax
+import time
 
+public_client = gdax.PublicClient()
 
 
 
@@ -10,6 +13,8 @@ client = Client(account_sid, auth_token)
 i = 0
 date = []
 arbitrage = []
+start_time = time.time()
+
 
 while (i<1):
     #########################BUY BTC IN COP #######################
@@ -18,20 +23,17 @@ while (i<1):
     if (data.status_code != 200):
         data = requests.get('https://localbitcoins.com/buy-bitcoins-online/COP/.json')
     
-    USD2COP = 2923.8050 # get the paypal API or site conversion api
+    USD2COP = 3100 # get the paypal API or site conversion api
 
 
-    COP_BTC = float(data.json()['data']['ad_list'][0]['data']['temp_price'])/USD2COP
+    COP_BTC = float(data.json()['data']['ad_list'][0]['data']['temp_price'])/USD2COP + 5.00
 
 
 
-     #########################SELL BTC IN USD #######################
-    BTC = requests.get('https://localbitcoins.com/sell-bitcoins-online/USD/national-bank-transfer/.json')
-   
-    if (BTC.status_code != 200):
-       BTC = requests.get('https://localbitcoins.com/sell-bitcoins-online/USD/national-bank-transfer/.json')
-       
-    USD_BTC = BTC.json()['data']['ad_list'][0]['data']['temp_price_usd']
+     #########################SELL BTC IN USD GDAX#######################
+    BTC = public_client.get_product_ticker(product_id='BTC-USD')
+
+    USD_BTC = BTC['price']
 
 
 
@@ -39,14 +41,11 @@ while (i<1):
     
 
     #####################PLOTTING############################
-    time = requests.get('https://api.coinbase.com/v2/time')
+    t = BTC['time']
 
-    if (time.status_code != 200):
-        time = requests.get('https://api.coinbase.com/v2/time')
-
-    Time = time.json()['data']['epoch']
+    Time = time.time() - start_time
     
-    iso = time.json()['data']['iso']
+    
     # To get date and time replace epoch with iso
 
 
@@ -80,7 +79,7 @@ while (i<1):
     
 
     
-    print("Current Time: " + iso)
+    print("Current Time: " + t)
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
@@ -88,9 +87,9 @@ while (i<1):
     print("Local Bitcoins Buy COP: " + str(COP_BTC))
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
-    print("Local Bitcoins Sell USD: " + USD_BTC)
+    print("GDAX Sell USD: " + USD_BTC)
     print("+++++++++++++++++++++++++++++++++++++++")
-    print("Arbitrage gain: " + str(Gain))
+    print("Arbitrage gain: " + str(Gain__per) + "%   that is a $" + str(round(Gain, 2)) + " Discount")
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
     print("+++++++++++++++++++++++++++++++++++++++")
