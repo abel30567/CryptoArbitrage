@@ -8,12 +8,12 @@ import time
 public_client = gdax.PublicClient()
 
 
-
 client = Client(account_sid, auth_token)
 i = 0
 date = []
 arbitrage = []
 start_time = time.time()
+
 
 
 while (i<1):
@@ -25,8 +25,9 @@ while (i<1):
     
     USD2COP = 3100 # get the paypal API or site conversion api
 
+    remitlyFee = 4.00
 
-    COP_BTC = float(data.json()['data']['ad_list'][0]['data']['temp_price'])/USD2COP + 5.00
+    COP_BTC = float(data.json()['data']['ad_list'][0]['data']['temp_price'])/USD2COP 
 
 
 

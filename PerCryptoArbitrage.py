@@ -27,7 +27,7 @@ while (i<1):
        
     PEN_BTC = BTC.json()['data']['ad_list'][0]['data']['temp_price_usd']
 
-    USD2PEN = 3.1310
+    USD2PEN = 3.2405
     ######################### COINBASE USA ########################
     BTC = requests.get('https://api.coinbase.com/v2/prices/BTC-USD/buy')
 
